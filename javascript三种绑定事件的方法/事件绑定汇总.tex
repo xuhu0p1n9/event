@@ -1,0 +1,24 @@
+那么既然已经有两种绑定事件的方法为什么还要有第三种呢？答案是这样的：
+
+用 "addeventlistener" 可以绑定多次同一个事件，且都会执行，而在DOM结构如果绑定两个 "onclick" 事件，只会执行第一个；在脚本通过匿名函数的方式绑定的只会执行最后一个事件。
+
+addEventListener()和attachEvent()的函数语法:
+1 elementObject.addEventListener(eventName,handle,useCapture) （支持主流浏览器、以及IE9.0及以上）
+eventName:要绑定的事件名称。注意写法，比如点击事件，写成click,而不是onclick.
+handle: 处理事件的函数名。但是写法上没有小括号。
+useCapture:Boolean类型，是否使用捕获，一般用false，具体涉及到的会在后边总结。
+2 elementObject.attachEvent(eventName,handle);（仅支持IE8及以下）
+从网上找到了一个兼容的好办法，相比较if。。else语句，这个方法用的是try..catch错误处理语句，可以避免浏览器出现错误提示。
+
+function addEvent(obj,type,handle){
+  try{
+   obj.addEventListener(type,handle,false);
+  }catch(e){
+   try{
+    obj.attachEvent('on'+type,handle);
+   }
+   catch(e){
+    obj['on' + type]=handle;//早期浏览器
+   }
+  }
+}
